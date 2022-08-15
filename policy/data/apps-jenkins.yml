@@ -1,0 +1,29 @@
+- !policy
+  id: jenkins-apps
+  body:
+    - !group
+ 
+    - &hosts
+      - !host
+        id: Secure_Freestyle_Project
+        annotations:
+          description: Freestyle project in Jenkins named Secure_Freestyle_Project in the Demo folder.
+          jenkins: true
+          project_url: na
+          authn-jwt/jenkins/jenkins_parent_name: Demo
+          authn-jwt/jenkins/jenkins_pronoun: Project
+          authn-jwt/jenkins/identity: Secure_Freestyle_Project
+          authn/api-key: true
+      - !host
+        id: Secure_Pipeline_Project
+        annotations:
+          description: Pipeline project in Jenkins named Secure_Pipeline_Project in the Demo folder.
+          jenkins: true
+          project_url: na
+          authn-jwt/jenkins/jenkins_parent_name: Demo
+          authn-jwt/jenkins/jenkins_pronoun: Pipeline
+          authn-jwt/jenkins/identity: Secure_Pipeline_Project
+          authn/api-key: true
+    - !grant
+      role: !group
+      members: *hosts

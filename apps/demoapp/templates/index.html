@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if errors %}
+  <div class="alert alert-danger" role="alert">
+    <strong>Errors:</strong>
+    <ul class="list-unstyled">
+        {% for err in errors %}
+          <li>{{err}}</li>
+        {% endfor %}
+    </ul>
+    {% if error_reason %}
+        <span>{{error_reason}}</span>
+    {% endif %}
+  </div>
+{% endif %}
+
+{% if not_auth_warn %}
+  <div class="alert alert-danger" role="alert">Not authenticated</div>
+{% endif %}
+
+{% if success_slo %}
+  <div class="alert alert-success" role="alert">Successfully logged out</div>
+{% endif %}
+
+
+{% if paint_logout %}
+
+  {% if attributes %}
+
+  <div class="container px-4 py-5" id="hanging-icons">
+    <h2 class="pb-2 border-bottom">Conjur Cloud & Secrets Hub Demo App</h2>
+    <div class="row">
+    <p class="lead mb-4">Welcome, {{ userData['name'].0 }}!</p>
+    <p class="lead mb-4">This demo application runs on AWS and connect to database using secrets from CyberArk Identity Security Platform,either from <b>Conjur Cloud</b> or <b>Secrets Hub (sync to AWS Secrets Manager)</b>.</p>
+    <p class="lead mb-4">Secret Zero are elimiated by utilizing AWS IAM Roles as the native attribute to authz access to secrets</p>
+    </div>
+     <div class="row gap-5">
+      <div class="col d-flex align-items-start position-relative border .bg-light.bg-gradient p-5">
+        <img src="/static/image/conjurcloud.png" class="img-fluid" alt="...">
+        <div>
+          <h2>Conjur Cloud</h2>
+          <p>Conjur Cloud is a SaaS-based cloud-agnostic solution for secrets management. It allows organizations to secure non-human access to secrets and eliminate the secret zero problem.</p>
+          <a href="/conjurcloud" class="btn btn-primary stretched-link">
+            Go to Conjur Cloud Demo
+          </a>
+        </div>
+      </div>
+      <div class="col d-flex align-items-start position-relative border .bg-light.bg-gradient p-5">
+        <img src="/static/image/secretshub.png" class="img-fluid" alt="...">
+        <div>
+          <h2>Secerts Hub</h2>
+          <p>Secrets Hub is a CyberArk SaaS solution that addresses the challenge of managing multiple security platforms in the cloud. </p>
+          <p>Secrets Hub acts as a trusted connector between cloud applications that run on AWS (Amazon Web Services) and CyberArk Privilege Cloud</p>
+          <a href="/secretshub" class="btn btn-primary stretched-link">
+            Go to Secrets Hub Demo
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% else %}
+    <div class="alert alert-danger" role="alert">You don't have any attributes</div>
+  {% endif %}
+    <div class="container">
+  	<!--<a href="?slo" class="btn btn-danger">Logout</a>-->
+    </div>
+{% else %}
+  <a href="?sso" class="btn btn-primary">Login</a> <a href="?sso2" class="btn btn-info">Login and access to attrs page</a>
+{% endif %}
+
+{% endblock %}

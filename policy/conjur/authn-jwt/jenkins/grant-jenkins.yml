@@ -1,0 +1,4 @@
+- !grant
+  role: !group apps
+  member: !group /data/jenkins-apps
+

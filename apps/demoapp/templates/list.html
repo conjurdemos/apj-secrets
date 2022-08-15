@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if paint_logout %}
+  {% if attributes %}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Demo</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if ssource=="cc"%} active" aria-current="page"  {% endif %}" href="/conjurcloud">Conjur Cloud</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if ssource=="sh"%} active" aria-current="page"  {% endif %} " href="/secretshub">Secrets Hub</a>
+        </li>
+      </ul>
+
+      <span class="navbar-text" style="margin-left: auto">
+	Hi, {{ userData['name'].0 }} 
+	<!--<a href="/?slo" class="btn btn-secondary">Logout</a> -->
+       </span>
+
+    </div>
+  </div>
+</nav>
+
+
+<div class="container p-3">
+
+<div class="accordion" id="accordionExample">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingOne">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+        Debug Info (for demo purpose)
+      </button>
+    </h2>
+    <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+
+
+    <h3>SSO User Info from CyberArk Identity (can be customized at <a href="https://aap4062.id.cyberark.cloud/admin#/ApplicationList" target="_blank">Identity Administration Portal)</a></h3>
+    <table class="table table-striped">
+      <thead>
+        <th>Name</th><th>Values</th>
+      </thead>
+      <tbody>
+        {% for attr in attributes %}
+          <tr><td>{{ attr.0 }}</td>
+          <td>
+            {% for val in attr.1 %}
+              {{ val }}
+            {% endfor %}
+          </td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h3>Secrets Info for {% if ssource=="cc" %}Conjur Cloud{% endif %}{% if ssource=="sh" %}Secrets Hub{% endif %}</h3>
+    <table class="table table-striped">
+      <thead>
+        <th>Name</th><th>Values</th>
+      </thead>
+      <tbody>
+        {% for attr in secretsInfo %}
+          <tr>
+		<td>{{ attr.0 }}</td>
+		<td>{{ attr.1 }}</td>
+	  </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+</div></div></div></div>
+
+<br/>
+
+{% if dbData %}
+
+<h1>Log Records from Database</h1>
+    
+  <table class="table table-striped">
+      <thead>
+	<th>No</th><th>Time</th><th>User</th><th>Details</th>
+      </thead>
+      <tbody>
+        {% for log in dbData %}
+	<tr><td>{{ log[0] }}</td><td>{{ log[1] }}</td><td>{{ log[2] }}</td><td>{{ log[3] }}</td></tr>
+        {% endfor %}
+     </tbody>
+    </table>
+
+{% endif %}
+</div>
+  {% else %}
+    <div class="alert alert-danger" role="alert">You don't have any attributes</div>
+  {% endif %}
+<!--  <a href="/?slo" class="btn btn-danger">Logout</a> -->
+
+{% else %}
+  <a href="/?sso2" class="btn btn-primary">Login and access again to this page</a>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,3 @@
+- !grant
+  role: !group vault/POV/delegation/consumers
+  member: !group jenkins-apps

@@ -1,0 +1,16 @@
+- !policy
+  id: apj_secrets/iam-apps
+  body:
+    # Create a group to hold this application's hosts
+    - !group
+ 
+    # The host ID needs to match the AWS ARN of the role that needs to authenticate
+    - !host 
+       id: 409556437035/APJSecrets
+       annotations:
+         authn/api-key: true
+ 
+    # Add the host into the group
+    - !grant
+      role: !group
+      member: !host 409556437035/APJSecrets
