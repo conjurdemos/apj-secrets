@@ -8,19 +8,14 @@ Please refer to APJ Secrets SharePoint page for more details
 <table>
   <tr>
     <td>
-```bash
-├── policy
-├── jenkins
-├── apps
-└── conjur_load_policy.sh
-```
+├── policy<br/>
+├── jenkins<br/>
+└── apps
 </td><td>
-```bash
-Policies for Conjur Cloud, according to Conjur policy structure
-Jenkins Pipelines
+Policies for Conjur Cloud, according to Conjur policy structure<br/>
+Jenkins Pipelines<br/>
 Demo applications
-Script for loading policies to Conjur
-```
+</td>
 </tr>
 </table>
 
