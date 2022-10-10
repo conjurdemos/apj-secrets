@@ -37,12 +37,19 @@ ${ccc} policy load -f ./data/entitle-jenkins.yml -b data
 ###############################
 #  Authn-iam for apj-secrets 
 #  
-${ccc}  policy load -f ./conjur/authn-iam/authn-iam-apj_secrets.yml -b conjur/authn-iam
-${ccc}  authenticator enable --id authn-iam/apj_secrets
-${ccc}  policy load -f ./data/apps-aws.yml -b data
-${ccc}  policy load -f ./conjur/authn-iam/apj_secrets/grant_apj_secrets.yml -b conjur/authn-iam/apj_secrets
-${ccc}  policy load -f ./data/entitle-aws.yml -b data
+${ccc} policy load -f ./conjur/authn-iam/authn-iam-apj_secrets.yml -b conjur/authn-iam
+${ccc} authenticator enable --id authn-iam/apj_secrets
+${ccc} policy load -f ./data/apps-aws.yml -b data
+${ccc} policy load -f ./conjur/authn-iam/apj_secrets/grant_apj_secrets.yml -b conjur/authn-iam/apj_secrets
+${ccc} policy load -f ./data/entitle-aws.yml -b data
 
 
-
-
+###############################
+#  Authn-azure for apj-secrets 
+#  
+${ccc} policy load -f ./conjur/authn-azure/authn-azure-apj_secrets.yml -b conjur/authn-azure
+${ccc} variable set -i conjur/authn-azure/apj_secrets/provider-uri -v https://sts.windows.net/dc5c35ed-5102-4908-9a31-244d3e0134c6/
+${ccc} authenticator enable --id authn-azure/apj_secrets
+${ccc} policy load -f ./data/apps-azure.yml -b data
+${ccc} policy load -f ./conjur/authn-azure/apj_secrets/grant_apj_secrets.yml -b conjur/authn-azure/apj_secrets
+${ccc} policy load -f ./data/entitle-azure.yml -b data
