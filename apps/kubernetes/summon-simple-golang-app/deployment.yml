@@ -1,0 +1,64 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-app-namespace
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: test-app-sa
+  namespace: test-app-namespace
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: summon-app-service
+  namespace: test-app-namespace
+spec:
+  type: NodePort
+  selector:
+    app: summon-app
+  ports:
+    - protocol: TCP
+      port: 30003
+      targetPort: 8080
+      nodePort: 30003
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: summon-app
+  namespace: test-app-namespace
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: summon-app
+  template:
+    metadata:
+      labels:
+        app: summon-app
+    spec:
+      serviceAccountName: test-app-sa
+      containers:
+      - name: summon-app-container
+        image: quincycheng/summon-simple-golang-app:v1.0.2
+        ports:
+        - containerPort: 8080
+        env:
+        - name: JWT_TOKEN_PATH
+          value: /var/run/secrets/kubernetes.io/serviceaccount/token
+        - name: CONJUR_APPLIANCE_URL
+          value: https://apj-secrets.secretsmgr.cyberark.cloud/api
+        - name: CONJUR_ACCOUNT
+          value: conjur
+        - name: CONJUR_AUTHN_JWT_SERVICE_ID
+          value: dev-cluster
+        - name: CONJUR_AUTHN_URL
+          value: https://apj-secrets.secretsmgr.cyberark.cloud/api/authn-jwt/dev-cluster
+        - name: CONJUR_SSL_CERTIFICATE
+          valueFrom:
+            configMapKeyRef:
+              key: ssl-certificate
+              name: conjur-ssl-cert

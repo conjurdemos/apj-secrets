@@ -53,3 +53,23 @@ ${ccc} authenticator enable --id authn-azure/apj_secrets
 ${ccc} policy load -f ./data/apps-azure.yml -b data
 ${ccc} policy load -f ./conjur/authn-azure/apj_secrets/grant_apj_secrets.yml -b conjur/authn-azure/apj_secrets
 ${ccc} policy load -f ./data/entitle-azure.yml -b data
+
+
+############################
+#  Authn-JWT for kubernetes
+# 
+${ccc} policy load -f ./conjur/authn-jwt/authn-jwt-kubernetes.yaml -b conjur/authn-jwt
+
+${ccc} variable set -i conjur/authn-jwt/dev-cluster/public-keys -v "{\"type\":\"jwks\", \"value\":$(cat ./conjur/authn-jwt/kubernetes/jwks.json)}"
+${ccc} variable set -i conjur/authn-jwt/dev-cluster/issuer -v https://kubernetes.default.svc.cluster.local
+${ccc} variable set -i conjur/authn-jwt/dev-cluster/token-app-property -v "sub"
+${ccc} variable set -i conjur/authn-jwt/dev-cluster/identity-path -v data/apj_secrets/kubernetes-apps
+${ccc} variable set -i conjur/authn-jwt/dev-cluster/audience -v "https://kubernetes.default.svc.cluster.local"
+
+${ccc} authenticator enable --id authn-jwt/dev-cluster
+
+${ccc} policy load -f ./data/apps-kubernetes.yml -b data
+
+${ccc} policy load -f ./conjur/authn-jwt/kubernetes/grant-kubernetes.yml -b conjur/authn-jwt/dev-cluster
+${ccc} policy load -f ./data/entitle-kubernetes.yml -b data
+

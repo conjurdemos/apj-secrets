@@ -10,14 +10,24 @@ Please refer to APJ Secrets SharePoint page for more details
     <td>
 ├── policy<br/>
 ├── jenkins<br/>
-└── apps
+└── apps<br/>
+    ├── azure<br/>
+    ├── demoapp<br/>
+    └── container
+        ├── azure<br/>
+        ├── demoapp<br/>
+        └── container
 </td><td>
 Policies for Conjur Cloud, according to Conjur policy structure<br/>
 Jenkins Pipelines<br/>
-Demo applications
+Demo applications<br/>
+ - Script for Azure
+ - Demo apps on Identity with SAML, Conjur Cloud & Secrets Hub integration
+ - Container Apps 
 </td>
 </tr>
 </table>
+
 
 ## Maintainer
 Quincy Cheng

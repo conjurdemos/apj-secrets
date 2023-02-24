@@ -1,0 +1,106 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-app-namespace
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: test-app-sa
+  namespace: test-app-namespace
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sidecar-app-service
+  namespace: test-app-namespace
+spec:
+  type: NodePort
+  selector:
+    app: sidecar-app
+  ports:
+    - protocol: TCP
+      port: 30002
+      targetPort: 8080
+      nodePort: 30002
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: sidecar-app
+  name: sidecar-app
+  namespace: test-app-namespace
+
+spec:
+  selector:
+    matchLabels:
+      app: sidecar-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: sidecar-app
+    spec:
+      serviceAccountName: test-app-sa
+      containers:
+        - name: test-app
+          image: quincycheng/api-simple-golang-app:v1.0
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+          - mountPath: /run/conjur
+            name: conjur-access-token
+            readOnly: true
+          env:
+            - name: CONJUR_APPLIANCE_URL
+              value: https://apj-secrets.secretsmgr.cyberark.cloud/api
+            - name: CONJUR_ACCOUNT
+              value: conjur
+            - name: CONJUR_AUTHN_JWT_SERVICE_ID
+              value: dev-cluster
+            - name: CONJUR_AUTHN_URL
+              value: https://apj-secrets.secretsmgr.cyberark.cloud/api/authn-jwt/dev-cluster
+            - name: CONJUR_SSL_CERTIFICATE
+              valueFrom:
+                configMapKeyRef:
+                  key: ssl-certificate
+                  name: conjur-ssl-cert
+
+        - image: cyberark/conjur-authn-k8s-client
+          imagePullPolicy: Always
+          name: authenticator
+          env:
+            - name: JWT_TOKEN_PATH
+              value: /var/run/secrets/kubernetes.io/serviceaccount/token
+            - name: CONJUR_APPLIANCE_URL
+              value: https://apj-secrets.secretsmgr.cyberark.cloud/api
+            - name: CONJUR_ACCOUNT
+              value: conjur
+            - name: CONJUR_AUTHN_JWT_SERVICE_ID
+              value: dev-cluster
+            - name: CONJUR_AUTHN_URL
+              value: https://apj-secrets.secretsmgr.cyberark.cloud/api/authn-jwt/dev-cluster
+            - name: CONJUR_SSL_CERTIFICATE
+              valueFrom:
+                configMapKeyRef:
+                  key: ssl-certificate
+                  name: conjur-ssl-cert
+
+          volumeMounts:
+            - mountPath: /run/conjur
+              name: conjur-access-token
+            - mountPath: /var/run/secrets/tokens
+              name: jwt-token
+      volumes:
+        - name: conjur-access-token
+          emptyDir:
+            medium: Memory
+        - name: jwt-token
+          projected:
+            sources:
+              - serviceAccountToken:
+                  path: jwt
+                  expirationSeconds: 6000
+                  audience: conjur
