@@ -1,0 +1,15 @@
+- !policy
+  id: apj_secrets/kubernetes-apps-sa
+  body:     
+    - !group
+
+    - &hosts
+      - !host
+        id: important-app-sa
+        annotations:
+          authn-jwt/dev-cluster-sa/kubernetes.io/serviceaccount/name: important-app-sa
+          authn/api-key: true
+
+    - !grant
+      role: !group
+      members: *hosts

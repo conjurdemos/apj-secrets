@@ -55,8 +55,8 @@ ${ccc} policy load -f ./conjur/authn-azure/apj_secrets/grant_apj_secrets.yml -b 
 ${ccc} policy load -f ./data/entitle-azure.yml -b data
 
 
-############################
-#  Authn-JWT for kubernetes
+########################################################
+#  Authn-JWT for kubernetes (sub: namespace & sa)
 # 
 ${ccc} policy load -f ./conjur/authn-jwt/authn-jwt-kubernetes.yaml -b conjur/authn-jwt
 
@@ -73,3 +73,39 @@ ${ccc} policy load -f ./data/apps-kubernetes.yml -b data
 ${ccc} policy load -f ./conjur/authn-jwt/kubernetes/grant-kubernetes.yml -b conjur/authn-jwt/dev-cluster
 ${ccc} policy load -f ./data/entitle-kubernetes.yml -b data
 
+########################################################
+#  Authn-JWT for kubernetes (namespace)
+# 
+${ccc} policy load -f ./conjur/authn-jwt/authn-jwt-kubernetes-namespace.yaml -b conjur/authn-jwt
+
+${ccc} variable set -i conjur/authn-jwt/dev-cluster-namespace/public-keys -v "{\"type\":\"jwks\", \"value\":$(cat ./conjur/authn-jwt/kubernetes/jwks.json)}"
+${ccc} variable set -i conjur/authn-jwt/dev-cluster-namespace/issuer -v https://kubernetes.default.svc.cluster.local
+${ccc} variable set -i conjur/authn-jwt/dev-cluster-namespace/token-app-property -v "kubernetes.io/namespace"
+${ccc} variable set -i conjur/authn-jwt/dev-cluster-namespace/identity-path -v data/apj_secrets/kubernetes-apps-namespace
+${ccc} variable set -i conjur/authn-jwt/dev-cluster-namespace/audience -v "https://kubernetes.default.svc.cluster.local"
+
+${ccc} authenticator enable --id authn-jwt/dev-cluster-namespace
+
+${ccc} policy load -f ./data/apps-kubernetes-namespace.yml -b data
+
+${ccc} policy load -f ./conjur/authn-jwt/kubernetes/grant-kubernetes-namespace.yml -b conjur/authn-jwt/dev-cluster-namespace
+${ccc} policy load -f ./data/entitle-kubernetes-namespace.yml -b data
+
+
+########################################################
+#  Authn-JWT for kubernetes (sa)
+# 
+${ccc} policy load -f ./conjur/authn-jwt/authn-jwt-kubernetes-sa.yaml -b conjur/authn-jwt
+
+${ccc} variable set -i conjur/authn-jwt/dev-cluster-sa/public-keys -v "{\"type\":\"jwks\", \"value\":$(cat ./conjur/authn-jwt/kubernetes/jwks.json)}"
+${ccc} variable set -i conjur/authn-jwt/dev-cluster-sa/issuer -v https://kubernetes.default.svc.cluster.local
+${ccc} variable set -i conjur/authn-jwt/dev-cluster-sa/token-app-property -v "kubernetes.io/serviceaccount/name"
+${ccc} variable set -i conjur/authn-jwt/dev-cluster-sa/identity-path -v data/apj_secrets/kubernetes-apps
+${ccc} variable set -i conjur/authn-jwt/dev-cluster-sa/audience -v "https://kubernetes.default.svc.cluster.local"
+
+${ccc} authenticator enable --id authn-jwt/dev-cluster-sa
+
+${ccc} policy load -f ./data/apps-kubernetes-sa.yml -b data
+
+${ccc} policy load -f ./conjur/authn-jwt/kubernetes/grant-kubernetes-sa.yml -b conjur/authn-jwt/dev-cluster-sa
+${ccc} policy load -f ./data/entitle-kubernetes-sa.yml -b data

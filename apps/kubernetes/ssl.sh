@@ -5,3 +5,5 @@ export CONJUR_SSL_CERT=$(openssl s_client -showcerts  -connect apj-secrets.secre
 
 kubectl -n test-app-namespace create configmap conjur-ssl-cert --from-literal=ssl-certificate="${CONJUR_SSL_CERT}"
 
+kubectl -n important-app-namespace create configmap conjur-ssl-cert --from-literal=ssl-certificate="${CONJUR_SSL_CERT}"
+kubectl -n random-app-namespace create configmap conjur-ssl-cert --from-literal=ssl-certificate="${CONJUR_SSL_CERT}"

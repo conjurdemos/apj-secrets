@@ -11,7 +11,7 @@
           authn-azure/subscription-id: 535aab86-31f2-4f4d-8e71-a974f91d86f1
           authn-azure/resource-group: apj_se_quincycheng_lab
           # authn-azure/user-assigned-identity: <user-assigned managed identity>
-          authn-azure/system-assigned-identity: e3694eb7-9745-4339-aba3-52969ec9411a
+          authn-azure/system-assigned-identity: 90bccd1f-90b1-4419-8d6a-6131a431e7ed
           authn/api-key: true
      
     # Add the host into the group

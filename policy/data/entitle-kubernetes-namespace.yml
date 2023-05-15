@@ -1,0 +1,5 @@
+- !grant
+  role: !group vault/POV/delegation/consumers
+  member: !group apj_secrets/kubernetes-apps-namespace
+
+

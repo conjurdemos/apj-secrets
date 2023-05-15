@@ -24,6 +24,36 @@
           authn-jwt/jenkins/jenkins_pronoun: Pipeline
           authn-jwt/jenkins/identity: Secure_Pipeline_Project
           authn/api-key: true
+      - !host
+        id: Secure_SSHKey_Project
+        annotations:
+          description: SSH Key to Linux host demo.  Freestyle project in Jenkins named Secure_SSHKey_Project in the Demo folder.
+          jenkins: true
+          project_url: na
+          authn-jwt/jenkins/jenkins_parent_name: Demo
+          authn-jwt/jenkins/jenkins_pronoun: Project
+          authn-jwt/jenkins/identity: Secure_SSHKey_Project
+          authn/api-key: true
+      - !host
+        id: Secure_SSHKey_Pipeline
+        annotations:
+          description: SSH Key to Linux host demo.  Pipeline project in Jenkins named Secure_SSHKey_Pipeline in the Demo folder.
+          jenkins: true
+          project_url: na
+          authn-jwt/jenkins/jenkins_parent_name: Demo
+          authn-jwt/jenkins/jenkins_pronoun: Pipeline
+          authn-jwt/jenkins/identity: Secure_SSHKey_Pipeline
+          authn/api-key: true
+      - !host
+        id: Secure_SSHKey_Pipeline_Demo
+        annotations:
+          description: SSH Key to Linux host demo.  Pipeline project in Jenkins named Secure_SSHKey_Pipeline_Demo in the Demo folder.
+          jenkins: true
+          project_url: na
+          authn-jwt/jenkins/jenkins_parent_name: Demo
+          authn-jwt/jenkins/jenkins_pronoun: Pipeline
+          authn-jwt/jenkins/identity: Secure_SSHKey_Pipeline_Demo
+          authn/api-key: true
     - !grant
       role: !group
       members: *hosts

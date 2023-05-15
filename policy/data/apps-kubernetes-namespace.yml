@@ -1,0 +1,15 @@
+- !policy
+  id: apj_secrets/kubernetes-apps-namespace
+  body:     
+    - !group
+
+    - &hosts
+      - !host
+        id: important-app-namespace
+        annotations:
+          authn-jwt/dev-cluster-namespace/kubernetes.io/namespace: important-app-namespace
+          authn/api-key: true
+
+    - !grant
+      role: !group
+      members: *hosts
