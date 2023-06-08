@@ -1,0 +1,16 @@
+- !policy
+  id: apj_secrets/tfc-apps
+  body:
+    # Create a group to hold this application's hosts
+    - !group
+ 
+    # The host ID needs to match the terraform cloud account name
+    - !host 
+       id: quincycheng
+       annotations:
+         authn/api-key: true
+ 
+    # Add the host into the group
+    - !grant
+      role: !group
+      member: !host quincycheng
