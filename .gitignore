@@ -1,3 +1,4 @@
 .asm-sam
 /apps/demoapp/__pycache__
 /apps/demoapp/env
+/apps/terraform_cloud/.*

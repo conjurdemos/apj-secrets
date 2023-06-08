@@ -100,7 +100,7 @@ ${ccc} policy load -f ./conjur/authn-jwt/authn-jwt-kubernetes-sa.yaml -b conjur/
 ${ccc} variable set -i conjur/authn-jwt/dev-cluster-sa/public-keys -v "{\"type\":\"jwks\", \"value\":$(cat ./conjur/authn-jwt/kubernetes/jwks.json)}"
 ${ccc} variable set -i conjur/authn-jwt/dev-cluster-sa/issuer -v https://kubernetes.default.svc.cluster.local
 ${ccc} variable set -i conjur/authn-jwt/dev-cluster-sa/token-app-property -v "kubernetes.io/serviceaccount/name"
-${ccc} variable set -i conjur/authn-jwt/dev-cluster-sa/identity-path -v data/apj_secrets/kubernetes-apps
+${ccc} variable set -i conjur/authn-jwt/dev-cluster-sa/identity-path -v data/apj_secrets/kubernetes-apps-sa
 ${ccc} variable set -i conjur/authn-jwt/dev-cluster-sa/audience -v "https://kubernetes.default.svc.cluster.local"
 
 ${ccc} authenticator enable --id authn-jwt/dev-cluster-sa
@@ -109,3 +109,14 @@ ${ccc} policy load -f ./data/apps-kubernetes-sa.yml -b data
 
 ${ccc} policy load -f ./conjur/authn-jwt/kubernetes/grant-kubernetes-sa.yml -b conjur/authn-jwt/dev-cluster-sa
 ${ccc} policy load -f ./data/entitle-kubernetes-sa.yml -b data
+
+
+########################################################
+#  Authn API Key for Terraform cloud
+
+${ccc} policy load -f ./data/apps-tfc.yml -b data
+${ccc} policy load -f ./data/entitle-tfc.yml -b data
+
+# Get Conjur Cloud SSL Cert
+#
+openssl s_client -showcerts -connect apj-secrets.secretsmgr.cyberark.cloud:443 < /dev/null 2> /dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p'
