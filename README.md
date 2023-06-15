@@ -12,7 +12,7 @@ Please refer to APJ Secrets SharePoint page for more details
     │   ├── container              # Source code for container images
     │   ├── cp                     # Demo script for CP
     │   ├── demoapp                # Demo application with Identity, Conjur Cloud & Secrets Hub
-    │   ├── kubernetes             # Demo application with Identity, Conjur Cloud & Secrets Hub
+    │   ├── kubernetes             # Demo kubernetes manifests for Kubernetes
     │   └── terraform_cloud        # Demo manifests for Terraform Cloud 
     └── policy                     # Conjur Policies
         ├── conjur                 # Policies under /conjur, mainly for Conjur Authenticators
