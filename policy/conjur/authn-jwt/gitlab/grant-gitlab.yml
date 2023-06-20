@@ -1,0 +1,4 @@
+# Load under -b conjur/authn-jwt/gitlab
+- !grant
+  role: !group consumers
+  member: !layer /data/gitlab-apps
