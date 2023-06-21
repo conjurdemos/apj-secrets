@@ -1,0 +1,30 @@
+# Load under -b data
+- !policy
+  id: gitlab-apps
+  body:
+  - !layer
+  - &hosts
+    - !host
+      id: apj-secrets/aws-cli-demo
+      annotations:
+        authn-jwt/gitlab/ref: main
+        authn-jwt/gitlab/namespace_path: apj-secrets
+        authn-jwt/gitlab/user_email: apj-secrets@outlook.com
+        authn/api-key: true
+    - !host
+      id: apj-secrets/terraform-aws-s3-demo
+      annotations:
+        authn-jwt/gitlab/ref: main
+        authn-jwt/gitlab/namespace_path: apj-secrets
+        authn-jwt/gitlab/user_email: apj-secrets@outlook.com
+        authn/api-key: true
+    - !host
+      id: apj-secrets/terraform-aws-s3-cleanup
+      annotations:
+        authn-jwt/gitlab/ref: main
+        authn-jwt/gitlab/namespace_path: apj-secrets
+        authn-jwt/gitlab/user_email: apj-secrets@outlook.com
+        authn/api-key: true
+  - !grant 
+    role: !layer
+    members: *hosts

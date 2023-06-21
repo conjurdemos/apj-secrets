@@ -1,0 +1,32 @@
+variables:
+  AWS_REGION: ap-southeast-1
+  CONJUR_APPLIANCE_URL: "https://apj-secrets.secretsmgr.cyberark.cloud/api"
+  CONJUR_ACCOUNT: "conjur"
+  CONJUR_AUTHN_JWT_SERVICE_ID: "gitlab"
+  CONJUR_AUTHN_JWT_TOKEN: "${CI_JOB_JWT_V2}"
+Fetch variables from Conjur:
+  stage: .pre
+  image:
+    name: docker.io/nfmsjoeg/authn-jwt-gitlab:latest
+  script:
+    - echo AWS_ACCESS_KEY_ID=$(CONJUR_SECRET_ID="data/vault/POV/Cloud Service-aws-access-keys-jtan-apj-secrets-gitlab/AWSAccessKeyID" /authn-jwt-gitlab) >> conjurVariables.env
+    - echo AWS_SECRET_ACCESS_KEY=$(CONJUR_SECRET_ID="data/vault/POV/Cloud Service-aws-access-keys-jtan-apj-secrets-gitlab/password" /authn-jwt-gitlab) >> conjurVariables.env
+  artifacts:
+    reports:
+      dotenv: conjurVariables.env
+Verify bucket:
+  stage: test
+  image:
+    name: docker.io/amazon/aws-cli:latest
+    entrypoint: [""]
+  script:
+    - aws s3 ls s3://jtan-tfdemo
+    - aws s3 cp s3://jtan-tfdemo/demo.txt .
+    - cat ./demo.txt
+Delete bucket:
+  stage: deploy
+  image:
+    name: docker.io/amazon/aws-cli:latest
+    entrypoint: [""]
+  script:
+    - aws s3 rb s3://jtan-tfdemo --force
