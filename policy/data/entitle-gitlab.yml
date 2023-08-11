@@ -1,0 +1,4 @@
+# Load under -b data
+- !grant
+  role: !group vault/POV/delegation/consumers
+  member: !layer gitlab-apps

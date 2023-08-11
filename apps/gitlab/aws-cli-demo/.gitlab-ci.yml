@@ -1,0 +1,32 @@
+variables:
+  AWS_REGION: ap-southeast-1
+  CONJUR_APPLIANCE_URL: "https://apj-secrets.secretsmgr.cyberark.cloud/api"
+  CONJUR_ACCOUNT: "conjur"
+  CONJUR_AUTHN_JWT_SERVICE_ID: "gitlab"
+  CONJUR_AUTHN_JWT_TOKEN: "${CI_JOB_JWT_V2}"
+Fetch variables from Conjur:
+  stage: .pre
+  image:
+    name: docker.io/nfmsjoeg/authn-jwt-gitlab:latest
+  script:
+    - echo AWS_ACCESS_KEY_ID=$(CONJUR_SECRET_ID="data/vault/POV/Cloud Service-aws-access-keys-jtan-apj-secrets-gitlab/AWSAccessKeyID" /authn-jwt-gitlab) >> conjurVariables.env
+    - echo AWS_SECRET_ACCESS_KEY=$(CONJUR_SECRET_ID="data/vault/POV/Cloud Service-aws-access-keys-jtan-apj-secrets-gitlab/password" /authn-jwt-gitlab) >> conjurVariables.env
+  artifacts:
+    reports:
+      dotenv: conjurVariables.env
+Run AWS CLI:
+  stage: test
+  image:
+    name: docker.io/amazon/aws-cli:latest
+    entrypoint: [""]
+  script:
+    - aws sts get-caller-identity
+Check caller AWS STS token via Terraform using variables from Conjur:
+  stage: test
+  image:
+    name: docker.io/hashicorp/terraform:latest
+    entrypoint: [""]
+  before_script:
+    - terraform init
+  script:
+    - terraform plan

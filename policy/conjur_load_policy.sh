@@ -120,3 +120,18 @@ ${ccc} policy load -f ./data/entitle-tfc.yml -b data
 # Get Conjur Cloud SSL Cert
 #
 openssl s_client -showcerts -connect apj-secrets.secretsmgr.cyberark.cloud:443 < /dev/null 2> /dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p'
+
+###############################
+#  Authn-JWT for GitLab 
+#  https://gitlab.com/apj-secrets
+${ccc} policy load -f ./conjur/authn-jwt/authn-jwt-gitlab.yml -b conjur/authn-jwt
+
+${ccc} variable set -i conjur/authn-jwt/gitlab/jwks-uri -v https://gitlab.com/-/jwks/
+${ccc} variable set -i conjur/authn-jwt/gitlab/token-app-property -v project_path
+${ccc} variable set -i conjur/authn-jwt/gitlab/identity-path -v data/gitlab-apps
+${ccc} variable set -i conjur/authn-jwt/gitlab/issuer -v https://gitlab.com
+
+${ccc} authenticator enable --id authn-jwt/gitlab
+${ccc} policy load -f ./data/apps-gitlab.yml -b data
+${ccc} policy load -f ./conjur/authn-jwt/gitlab/grant-gitlab.yml -b conjur/authn-jwt/gitlab
+${ccc} policy load -f ./data/entitle-gitlab.yml -b data
