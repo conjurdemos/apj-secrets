@@ -2,7 +2,7 @@ import configparser
 
 import os, boto3, base64, json, requests
 import urllib.parse
-from signer import headers_for_signed_url
+from signer import authenticate_conjur_with_iam, fetch_aws_headers
 
 
 def get_secrets_from_conjur_cloud():
@@ -24,27 +24,9 @@ def get_secrets_from_conjur_cloud():
     conjurService = config['ConjurCloud']['ConjurService']
     conjurAppId = config['ConjurCloud']['ConjurAppId']
 
-    #assume AWS role with access to Conjur Secrets
-    client = boto3.client('sts')
-    assumeConjurRole = client.assume_role(RoleArn=awsRole, RoleSessionName='10001', DurationSeconds=900)
-
-
-    #get signed AWSv4 headers from STS GetCallerID Function
-    signed_headers = headers_for_signed_url(assumeConjurRole["Credentials"]["AccessKeyId"], 
-        assumeConjurRole["Credentials"]["SecretAccessKey"], 
-        assumeConjurRole["Credentials"]["SessionToken"],
-        awsRegion)
-
-    authenticate_url = "{conjur_appliance_url}/authn-iam/{webservice}/{account}/{host}/authenticate".format(
-                        conjur_appliance_url = conjurUrl,
-                        account = conjurAccount,
-                        webservice = conjurService,
-                        host = urllib.parse.quote_plus(conjurAppId)
-                    )
-
-    authResponse = requests.post(authenticate_url, data=signed_headers)
-    #convert auth token to base64
-    token_b64 = base64.b64encode(authResponse.text.encode('utf-8')).decode("utf-8")
+    #Get Conjur Access Token
+    headers = fetch_aws_headers()
+    token_b64 = authenticate_conjur_with_iam(headers)
 
     #now we can retrieve secrets to our heart's content
     retrieve_variable_url = "{conjur_appliance_url}/secrets/{account}/variable/".format(
