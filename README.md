@@ -14,6 +14,7 @@ Please refer to APJ Secrets SharePoint page for more details
     │   ├── demoapp                # Demo application with Identity, Conjur Cloud & Secrets Hub
     │   ├── gitlab                 # Demo pipeline and terraform files for GitLab
     │   ├── kubernetes             # Demo kubernetes manifests for Kubernetes
+    │   ├── registratino           # Source code for self-registration portal     
     │   └── terraform_cloud        # Demo manifests for Terraform Cloud 
     └── policy                     # Conjur Policies
         ├── conjur                 # Policies under /conjur, mainly for Conjur Authenticators

@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if action =="default" %}
+  <form method="post">
+  <div class="container col-xl-10 col-xxl-8 px-4 py-5">
+    <div class="row align-items-center g-lg-5 py-5">
+      <div class="col-lg-7 text-center text-lg-start">
+        <h1 class="display-4 fw-bold lh-1 mb-3">APJ Secrets User Registration</h1>
+        <p class="col-lg-10 fs-4">Fill in the form on the right to register an account on APJ Secrets
+      </div>
+      <div class="col-md-10 mx-auto col-lg-5">
+        <form class="p-4 p-md-5 border rounded-3 bg-light">
+
+
+<div class="form-floating mb-3">
+  <input type="email" class="form-control" name="email" id="email" placeholder="name@example.com">
+  <label for="email">Email address</label>
+</div>
+
+
+       <div class="form-floating mb-3">
+           <input type="text" class="form-control" name="displayname" id="displayname" placeholder="John Smith">
+           <label for="displayname">Display Name</label>
+       </div>
+       <div class="form-floating mb-3">
+           <input type="text" class="form-control" name="phone" id="phone" placeholder="John Smith">
+           <label for="phone">Mobile Phone</label>
+       </div>
+
+
+          <button class="w-100 btn btn-lg btn-primary" type="submit">Sign up</button>
+          <hr class="my-4">
+          <small class="text-muted">By clicking Sign up, you agree to the terms of use.</small>
+        </form>
+      </div>
+
+
+
+
+    </div>
+  </div>
+  </form>
+{% endif %}
+{% if action =="complete" %}
+
+  {% if message=="ok" %}
+
+  <div class="px-4 pt-5 my-5  border-bottom">
+    <h1 class="display-4 fw-bold text-center">Registration Submitted</h1>
+    <div class="col-lg-6 mx-auto">
+      <p class="lead mb-4">
+	Your registration is now being processed.  
+      </p>
+      <p class="lead mb-4 text-start">
+	Once approved, you should be recieving 2 emails with information of the following 2 user accounts:
+        <ul>
+	   <li>{{username}}+admin@cyberark.com</li>
+	   <li>{{username}}+user@cyberark.com</li>
+        </ul>
+      </p>
+      <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
+        <button type="button" class="btn btn-primary btn-lg px-4 me-sm-3">Visit APJ Secrets SharePoint</button>
+      </div>
+    </div>
+  </div>
+
+   {% else %}
+ <div class="alert alert-danger" role="alert">
+    <h1>Error</h1>
+    <p>{{message}}</p>
+</div>
+   {% endif %}
+
+{% endif %}
+    
+
+{% endblock %}
+
