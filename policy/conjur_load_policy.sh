@@ -135,3 +135,12 @@ ${ccc} authenticator enable --id authn-jwt/gitlab
 ${ccc} policy load -f ./data/apps-gitlab.yml -b data
 ${ccc} policy load -f ./conjur/authn-jwt/gitlab/grant-gitlab.yml -b conjur/authn-jwt/gitlab
 ${ccc} policy load -f ./data/entitle-gitlab.yml -b data
+
+
+########################################################
+#  Authn API Key for Issue ephemeral secrets
+
+${ccc} policy load -f ./data/apps-ephemeralsecret.yml -b data
+${ccc} policy load -f ./conjur/issuers/demo-aws-issuer/demo-aws-issuer-delegation.yml -b conjur/issuers/demo-aws-issuer/delegation
+${ccc} policy load -f ./data/aws-ephemeral-secret.yml -b data/ephemerals
+${ccc} policy load -f ./data/entitle-ephemeral-secret.yml -b data

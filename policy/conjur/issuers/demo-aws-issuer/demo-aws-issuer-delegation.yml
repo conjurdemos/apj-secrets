@@ -1,0 +1,7 @@
+- !grant
+  role: !group consumers
+  members: !group /data/apj_secrets/ephemeralsecret-apps
+
+- !grant
+  role: !group consumers
+  members: !host /data/apj_secrets/ephemeralsecret-apps/quincycheng

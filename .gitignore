@@ -1,4 +1,8 @@
 .asm-sam
+.env
 /apps/demoapp/__pycache__
 /apps/demoapp/env
 /apps/terraform_cloud/.*
+/apps/ephemeral_terraform/.*
+terraform.tfstate*
+use_curl.sh
