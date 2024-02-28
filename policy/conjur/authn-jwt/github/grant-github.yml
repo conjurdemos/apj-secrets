@@ -1,0 +1,4 @@
+# Load under -b conjur/authn-jwt/github
+- !grant
+  role: !group apps
+  member: !group /data/github-apps

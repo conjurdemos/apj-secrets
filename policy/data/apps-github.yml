@@ -1,0 +1,22 @@
+- !policy
+  id: github-apps
+  body:
+      - !group
+
+      - &hosts
+        - !host
+          id: staging
+          annotations:
+              authn-jwt/github/repository: sadesh123/RFPCoPilot_Auth
+              authn-jwt/github/workflow: staging
+              authn/api-key: true
+        - !host
+          id: dummy
+          annotations:
+              authn-jwt/github/repository: quincycheng/dummy
+              authn-jwt/github/workflow: dummy
+              authn/api-key: true
+
+      - !grant
+        role: !group
+        members: *hosts

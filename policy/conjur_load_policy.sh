@@ -138,9 +138,26 @@ ${ccc} policy load -f ./data/entitle-gitlab.yml -b data
 
 
 ########################################################
-#  Authn API Key for Issue ephemeral secrets
+#  Authn API Key for Issuing ephemeral secrets
 
 ${ccc} policy load -f ./data/apps-ephemeralsecret.yml -b data
 ${ccc} policy load -f ./conjur/issuers/demo-aws-issuer/demo-aws-issuer-delegation.yml -b conjur/issuers/demo-aws-issuer/delegation
 ${ccc} policy load -f ./data/aws-ephemeral-secret.yml -b data/ephemerals
 ${ccc} policy load -f ./data/entitle-ephemeral-secret.yml -b data
+
+
+
+########################################################
+#  Authn API Key for GitHub Actions
+${ccc} policy load -f ./conjur/authn-jwt/authn-jwt-github.yml -b conjur/authn-jwt
+
+${ccc}  variable set -i conjur/authn-jwt/github/token-app-property -v "workflow"
+${ccc}  variable set -i conjur/authn-jwt/github/identity-path -v 'github-apps'
+${ccc}  variable set -i conjur/authn-jwt/github/issuer -v 'https://token.actions.githubusercontent.com'
+${ccc}  variable set -i conjur/authn-jwt/githußb/jwks-uri -v 'https://token.actions.githubusercontent.com/.well-known/jwks'
+${ccc}  variable set -i conjur/authn-jwt/github/enforced-claims -v "workflow,repository"
+
+${ccc} authenticator enable --id authn-jwt/github
+${ccc} policy load -f ./data/apps-github.yml -b data
+${ccc} policy load -f ./conjur/authn-jwt/github/grant-github.yml -b conjur/authn-jwt/github
+${ccc} policy load -f ./data/entitle-github.yml -b data
