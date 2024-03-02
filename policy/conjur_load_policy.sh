@@ -152,7 +152,7 @@ ${ccc} policy load -f ./data/entitle-ephemeral-secret.yml -b data
 ${ccc} policy load -f ./conjur/authn-jwt/authn-jwt-github.yml -b conjur/authn-jwt
 
 ${ccc}  variable set -i conjur/authn-jwt/github/token-app-property -v "workflow"
-${ccc}  variable set -i conjur/authn-jwt/github/identity-path -v 'github-apps'
+${ccc}  variable set -i conjur/authn-jwt/github/identity-path -v 'data/github-apps'
 ${ccc}  variable set -i conjur/authn-jwt/github/issuer -v 'https://token.actions.githubusercontent.com'
 ${ccc}  variable set -i conjur/authn-jwt/githußb/jwks-uri -v 'https://token.actions.githubusercontent.com/.well-known/jwks'
 ${ccc}  variable set -i conjur/authn-jwt/github/enforced-claims -v "workflow,repository"
