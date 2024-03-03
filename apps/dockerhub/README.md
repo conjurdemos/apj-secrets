@@ -10,17 +10,20 @@ We will use a private repo on Docker Hub, Conjur Cloud & Kubernetes as an exampl
    
    The value should be something like:
    ```
-   ** {"auths":{"docker.io":{"username":"quincychengdemo","password":"<docker hub password>","email":"quincy.cheng+demo@cyberark.com","auth":"<base64 string>"}}} **
+   {"auths":{"docker.io":{"username":"quincychengdemo","password":"<docker hub password>","email":"quincy.cheng@cyberark.com","auth":"<base64 string of username:password>"}}} 
    ```
    Please refer to https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/ for details
    
 2. [Conjur] Sync safe & accounts from Privilege Cloud
+   
    https://docs.cyberark.com/conjur-cloud/latest/en/Content/ConjurCloud/cl_addaccount.htm
 
 3. [Conjur] Setup workload identity for kubernetes on Conjur
+   
    https://docs.cyberark.com/conjur-cloud/latest/en/Content/Integrations/k8s-ocp/k8s-app-identity-jwt.htm
 
 4. [Conjur] Setup Authenticate Kubernetes resources
+   
    https://docs.cyberark.com/conjur-cloud/latest/en/Content/Integrations/k8s-ocp/k8s-jwt-authn.htm
 
 5. [Kubernetes] Create a dummy image pull secret
@@ -39,11 +42,15 @@ We will use a private repo on Docker Hub, Conjur Cloud & Kubernetes as an exampl
    
    Sample yaml:  [apps/dockerhub/k8s-secrets-cronjob.yaml](https://github.com/conjurdemos/apj-secrets/blob/master/apps/dockerhub/k8s-secrets-cronjob.yaml)
 
-8. [Kubernetes] Deploy application using the image pull 
+8. [Kubernetes] Trigger the cronjob and wait for a new job
+   
+   Review the log of the generated log to verify
+
+9. [Kubernetes] Deploy application using the image pull 
 
    Sample yaml: [apps/dockerhub/deployment.yaml](https://github.com/conjurdemos/apj-secrets/blob/master/apps/dockerhub/deployment.yaml)
 
-9.  [Kubernetes] Review the log to verify
+   Review the application's pod log to verify
 
 ## Reference
 - Pull an Image from a Private Registry
