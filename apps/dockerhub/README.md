@@ -1,30 +1,44 @@
-# Demo Kubernetes application in Private Repo on DockerHub 
+# Managing imagePullSecrets of Kubernetes
+
+The repo contains the step to deliver imagePullSecrets to Kubernetes from CyberArk PAM via Conjur using authn-jwt by secrets provider for kubenetes
+
+We will use a private repo on Docker Hub, Conjur Cloud & Kubernetes as an example
 
 ## Steps
 
-### Create Pull Secrets
-kubectl create secret docker-registry regcred --docker-server=<your-registry-server> --docker-username=<your-username> --docker-password=<your-password> --docker-email=<your-email>
+1. [PAM] Create a credential in PAM for pull secrets
+   The value should be something like:
+   ```
+   ** {"auths":{"docker.io":{"username":"quincychengdemo","password":"<docker hub password>","email":"quincy.cheng+demo@cyberark.com","auth":"<base64 string>"}}} **
+   ```
+   Please refer to https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/ for details
+   
+2. [Conjur] Sync safe & accounts from Privilege Cloud
+   https://docs.cyberark.com/conjur-cloud/latest/en/Content/ConjurCloud/cl_addaccount.htm
 
-For example:
-kubectl create secret docker-registry regcred -n test-app-namespace --docker-server="https://index.docker.io/v1" --docker-username=quincychengdemo --docker-password=SuperSecurePassword --docker-email=quincy.cheng+demo@cyberark.com
+3. [Conjur] Setup workload identity for kubernetes on Conjur
+   https://docs.cyberark.com/conjur-cloud/latest/en/Content/Integrations/k8s-ocp/k8s-app-identity-jwt.htm
 
-### Deploy Demo Deploymennt
+4. [Conjur] Setup Authenticate Kubernetes resources
+   https://docs.cyberark.com/conjur-cloud/latest/en/Content/Integrations/k8s-ocp/k8s-jwt-authn.htm
 
-Expectation: failed to get image as the "docker-password" above is invalid
+5. [Kubernetes] Create a dummy image pull secret
+   Please refer to https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/ for details
+   For example:
+   ```
+   kubectl create secret docker-registry regcred -n important-app-namespace --docker-server=docker.io --docker-username=quincychengdemo --docker-password=SuperSecurePassword --docker-email=quincy.cheng@cyberark.com
+   ```
+   
+6. [Kubernetes] Update secrets with `conjur-map`
+    Sample yaml:  [apps/dockerhub/pull-secrets.yaml](apps/dockerhub/pull-secrets.yaml)
 
-k apply -f deployment.yaml
+7. [Kubernetes] Setup Kubernetes Cronjob to sync image pull secrets 
+   Sample yaml:  [apps/dockerhub/k8s-secrets-cronjob.yaml](apps/dockerhub/k8s-secrets-cronjob.yaml)
 
-Result
-Error: ErrImagePull
+8. [Kubernetes] Deploy application using the image pull secret
+   Sample yaml: [apps/dockerhub/deployment.yaml](apps/dockerhub/deployment.yaml)
 
-Failed to pull image "quincychengdemo/private:v0.1": rpc error: code = Unknown desc = failed to pull and unpack image "docker.io/quincychengdemo/private:v0.1": failed to resolve reference "docker.io/quincychengdemo/private:v0.1": pull access denied, repository does not exist or may require authorization: server message: insufficient_scope: authorization failed
-
-
-### Deploy Secrets Provider Cronjob 
-
-k apply -f k8s-secrets-cronjob.yaml
-
-
+9. [Kubernetes] Review the log to verify
 
 ## Reference
 Pull an Image from a Private Registry
@@ -33,5 +47,3 @@ https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-regi
 CyberArk Conjur Kubernetes Secrets Provider as a CronJob
 https://gist.github.com/infamousjoeg/15e8c445982d1dab4e2b6fd719414bdd
 
-Kubernetes “x509: certificate has expired or is not yet valid” error
-https://medium.com/@guilospanck/kubernetes-x509-certificate-has-expired-or-is-not-yet-valid-error-cb9ca581d38b

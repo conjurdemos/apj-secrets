@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: private-reg
-  namespace: test-app-namespace
+  namespace: important-app-namespace
 spec:
   replicas: 1
   selector:
@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: private-reg
-        image: quincychengdemo/private:v0.1
+        image: quincychengdemo/private:0.1
         imagePullPolicy: Always
       imagePullSecrets:
       - name: regcred
