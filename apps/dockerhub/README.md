@@ -7,6 +7,7 @@ We will use a private repo on Docker Hub, Conjur Cloud & Kubernetes as an exampl
 ## Steps
 
 1. [PAM] Create a credential in PAM for pull secrets
+   
    The value should be something like:
    ```
    ** {"auths":{"docker.io":{"username":"quincychengdemo","password":"<docker hub password>","email":"quincy.cheng+demo@cyberark.com","auth":"<base64 string>"}}} **
@@ -23,6 +24,7 @@ We will use a private repo on Docker Hub, Conjur Cloud & Kubernetes as an exampl
    https://docs.cyberark.com/conjur-cloud/latest/en/Content/Integrations/k8s-ocp/k8s-jwt-authn.htm
 
 5. [Kubernetes] Create a dummy image pull secret
+
    Please refer to https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/ for details
    For example:
    ```
@@ -41,7 +43,7 @@ We will use a private repo on Docker Hub, Conjur Cloud & Kubernetes as an exampl
 
    Sample yaml: [apps/dockerhub/deployment.yaml](https://github.com/conjurdemos/apj-secrets/blob/master/apps/dockerhub/deployment.yaml)
 
-9. [Kubernetes] Review the log to verify
+9.  [Kubernetes] Review the log to verify
 
 ## Reference
 - Pull an Image from a Private Registry
