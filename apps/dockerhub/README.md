@@ -30,20 +30,23 @@ We will use a private repo on Docker Hub, Conjur Cloud & Kubernetes as an exampl
    ```
    
 6. [Kubernetes] Update secrets with `conjur-map`
-    Sample yaml:  [apps/dockerhub/pull-secrets.yaml](apps/dockerhub/pull-secrets.yaml)
+   
+    Sample yaml:  [apps/dockerhub/pull-secrets.yaml](https://github.com/conjurdemos/apj-secrets/blob/master/apps/dockerhub/pull-secrets.yaml)
 
 7. [Kubernetes] Setup Kubernetes Cronjob to sync image pull secrets 
-   Sample yaml:  [apps/dockerhub/k8s-secrets-cronjob.yaml](apps/dockerhub/k8s-secrets-cronjob.yaml)
+   
+   Sample yaml:  [apps/dockerhub/k8s-secrets-cronjob.yaml](https://github.com/conjurdemos/apj-secrets/blob/master/apps/dockerhub/k8s-secrets-cronjob.yaml)
 
-8. [Kubernetes] Deploy application using the image pull secret
-   Sample yaml: [apps/dockerhub/deployment.yaml](apps/dockerhub/deployment.yaml)
+8. [Kubernetes] Deploy application using the image pull 
+
+   Sample yaml: [apps/dockerhub/deployment.yaml](https://github.com/conjurdemos/apj-secrets/blob/master/apps/dockerhub/deployment.yaml)
 
 9. [Kubernetes] Review the log to verify
 
 ## Reference
-Pull an Image from a Private Registry
-https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+- Pull an Image from a Private Registry
+  https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 
-CyberArk Conjur Kubernetes Secrets Provider as a CronJob
-https://gist.github.com/infamousjoeg/15e8c445982d1dab4e2b6fd719414bdd
+- CyberArk Conjur Kubernetes Secrets Provider as a CronJob
+  https://gist.github.com/infamousjoeg/15e8c445982d1dab4e2b6fd719414bdd
 
