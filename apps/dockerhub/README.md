@@ -29,6 +29,7 @@ We will use a private repo on Docker Hub, Conjur Cloud & Kubernetes as an exampl
 5. [Kubernetes] Create a dummy image pull secret
 
    Please refer to https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/ for details
+   
    For example:
    ```
    kubectl create secret docker-registry regcred -n important-app-namespace --docker-server=docker.io --docker-username=quincychengdemo --docker-password=SuperSecurePassword --docker-email=quincy.cheng@cyberark.com
