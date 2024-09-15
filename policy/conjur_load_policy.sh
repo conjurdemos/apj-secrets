@@ -26,13 +26,17 @@ ${ccc} policy load -f ./conjur/authn-jwt/authn-jwt-jenkins.yml -b conjur/authn-j
 ${ccc} variable set -i conjur/authn-jwt/jenkins/jwks-uri -v https://jenkins.pov.quincycheng.com/jwtauth/conjur-jwk-set
 ${ccc} variable set -i conjur/authn-jwt/jenkins/token-app-property -v identity
 ${ccc} variable set -i conjur/authn-jwt/jenkins/identity-path -v data/jenkins-apps
-${ccc} variable set -i conjur/authn-jwt/jenkins/audience -v apj-secrets
+${ccc} variable set -i conjur/authn-jwt/jenkins/audience -v cyberark-conjur
 ${ccc} variable set -i conjur/authn-jwt/jenkins/issuer -v https://jenkins.pov.quincycheng.com
 
 ${ccc} authenticator enable --id authn-jwt/jenkins
 ${ccc} policy load -f ./data/apps-jenkins.yml -b data
 ${ccc} policy load -f ./conjur/authn-jwt/jenkins/grant-jenkins.yml -b conjur/authn-jwt/jenkins
 ${ccc} policy load -f ./data/entitle-jenkins.yml -b data
+
+
+${ccc} policy update -f ./data/apps-jenkins.yml -b data
+
 
 ###############################
 #  Authn-iam for apj-secrets 

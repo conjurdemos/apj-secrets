@@ -4,6 +4,17 @@
     - !group
  
     - &hosts
+
+      - !host
+        id: Demo/Secure_Freestyle_Project
+        annotations:
+            authn-jwt/jenkins/jenkins_task_noun: Build
+            authn-jwt/jenkins/jenkins_parent_full_name: Demo
+      - !host
+        id: Demo/Secure_Pipeline_Project
+        annotations:
+            authn-jwt/jenkins/jenkins_task_noun: Build
+            authn-jwt/jenkins/jenkins_parent_full_name: Demo
       - !host
         id: Secure_Freestyle_Project
         annotations:
