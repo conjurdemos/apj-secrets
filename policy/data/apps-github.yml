@@ -11,6 +11,18 @@
               authn-jwt/github/workflow: staging
               authn/api-key: true
         - !host
+          id: production
+          annotations:
+              authn-jwt/github/repository: sadesh123/RFPCoPilot_Auth
+              authn-jwt/github/workflow: production
+              authn/api-key: true
+        - !host
+          id: demo
+          annotations:
+              authn-jwt/github/repository: sadesh123/RFPCoPilot_Auth
+              authn-jwt/github/workflow: demo
+              authn/api-key: true
+        - !host
           id: dummy
           annotations:
               authn-jwt/github/repository: quincycheng/dummy
