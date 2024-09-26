@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: csi-test-app
+  namespace: test-app-namespace
+  annotations:
+    conjur.org/secrets: |
+      - "conjur/password.txt": "data/vault/POV/Database-MySQL-database.pov.example.com-admin/password"
+spec:
+  serviceAccountName: test-app-sa
+  containers:
+    - name: csi-test-app
+      image: alpine:latest
+      imagePullPolicy: IfNotPresent
+      command: [ "/bin/sh", "-c", "--" ]
+      args: [ "while true; do sleep 30; done;" ]
+      volumeMounts:
+      - name: conjur-csi-volume
+        mountPath: /mnt/conjur-csi-volume
+        readOnly: true
+  volumes:
+  - name: conjur-csi-volume
+    csi:
+      driver: secrets-store.csi.k8s.io
+      readOnly: true
+      volumeAttributes:
+        secretProviderClass: db-credentials

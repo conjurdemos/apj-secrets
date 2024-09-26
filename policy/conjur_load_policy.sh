@@ -165,3 +165,53 @@ ${ccc} authenticator enable --id authn-jwt/github
 ${ccc} policy load -f ./data/apps-github.yml -b data
 ${ccc} policy load -f ./conjur/authn-jwt/github/grant-github.yml -b conjur/authn-jwt/github
 ${ccc} policy load -f ./data/entitle-github.yml -b data
+
+
+
+
+
+
+########################################################
+#  Authn-JWT for AWS EKS (sub: namespace & sa)
+# 
+${ccc} policy load -f ./conjur/authn-jwt/authn-jwt-eks.yaml -b conjur/authn-jwt
+
+#aws eks describe-cluster --name apjsecrets-eks-shared --query 'cluster.identity.oidc.issuer'
+#"https://oidc.eks.us-east-1.amazonaws.com/id/21D582CD002646CCB715A6B527FE9FB8"
+#curl https://oidc.eks.us-east-1.amazonaws.com/id/21D582CD002646CCB715A6B527FE9FB8/keys > ./conjur/authn-jwt/eks/jwks.json
+${ccc} variable set -i conjur/authn-jwt/eks-cluster/public-keys -v "{\"type\":\"jwks\", \"value\":$(cat ./conjur/authn-jwt/eks/jwks.json)}"
+
+${ccc} variable set -i conjur/authn-jwt/eks-cluster/issuer -v "$(kubectl get --raw /.well-known/openid-configuration | jq -r '.issuer')"
+${ccc} variable set -i conjur/authn-jwt/eks-cluster/token-app-property -v "sub"
+${ccc} variable set -i conjur/authn-jwt/eks-cluster/identity-path -v data/apj_secrets/eks-apps
+${ccc} variable set -i conjur/authn-jwt/eks-cluster/audience -v "https://kubernetes.default.svc"
+
+${ccc} authenticator enable --id authn-jwt/eks-cluster
+
+${ccc} policy load -f ./data/apps-eks.yml -b data
+
+${ccc} policy load -f ./conjur/authn-jwt/eks/grant-eks.yml -b conjur/authn-jwt/eks-cluster
+${ccc} policy load -f ./data/entitle-eks.yml -b data
+
+
+########################################################
+#  Authn-JWT for AWS EKS (CSI)
+# 
+${ccc} policy load -f ./conjur/authn-jwt/authn-jwt-eks-csi.yaml -b conjur/authn-jwt
+
+#aws eks describe-cluster --name apjsecrets-eks-shared --query 'cluster.identity.oidc.issuer'
+#"https://oidc.eks.us-east-1.amazonaws.com/id/21D582CD002646CCB715A6B527FE9FB8"
+#curl https://oidc.eks.us-east-1.amazonaws.com/id/21D582CD002646CCB715A6B527FE9FB8/keys > ./conjur/authn-jwt/eks/jwks.json
+${ccc} variable set -i conjur/authn-jwt/eks-csi-cluster/public-keys -v "{\"type\":\"jwks\", \"value\":$(cat ./conjur/authn-jwt/eks/jwks.json)}"
+
+${ccc} variable set -i conjur/authn-jwt/eks-csi-cluster/issuer -v "$(kubectl get --raw /.well-known/openid-configuration | jq -r '.issuer')"
+${ccc} variable set -i conjur/authn-jwt/eks-csi-cluster/token-app-property -v "sub"
+${ccc} variable set -i conjur/authn-jwt/eks-csi-cluster/identity-path -v data/apj_secrets/eks-apps
+${ccc} variable set -i conjur/authn-jwt/eks-csi-cluster/audience -v "conjur"
+
+${ccc} authenticator enable --id authn-jwt/eks-csi-cluster
+
+${ccc} policy load -f ./data/apps-eks-csi.yml -b data
+
+${ccc} policy load -f ./conjur/authn-jwt/eks/grant-eks-csi.yml -b conjur/authn-jwt/eks-csi-cluster
+${ccc} policy load -f ./data/entitle-eks-csi.yml -b data
