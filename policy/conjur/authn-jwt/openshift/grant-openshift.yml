@@ -1,0 +1,4 @@
+- !grant
+  role: !group apps
+  member: !group /data/apj_secrets/openshift-apps
+
