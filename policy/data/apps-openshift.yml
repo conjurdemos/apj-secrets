@@ -1,0 +1,16 @@
+- !policy
+  id: apj_secrets/openshift-apps
+  body:     
+    - !group
+
+    - &hosts
+      - !host
+        id: system:serviceaccount:test-app-namespace:test-app-sa
+        annotations:
+          authn-jwt/openshift/kubernetes.io/namespace: test-app-namespace
+          authn-jwt/openshift/kubernetes.io/serviceaccount/name: test-app-sa
+          authn/api-key: true
+
+    - !grant
+      role: !group
+      members: *hosts

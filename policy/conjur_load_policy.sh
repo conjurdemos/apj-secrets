@@ -215,3 +215,24 @@ ${ccc} policy load -f ./data/apps-eks-csi.yml -b data
 
 ${ccc} policy load -f ./conjur/authn-jwt/eks/grant-eks-csi.yml -b conjur/authn-jwt/eks-csi-cluster
 ${ccc} policy load -f ./data/entitle-eks-csi.yml -b data
+
+
+
+
+########################################################
+#  Authn-JWT for Openshift (sub: namespace & sa)
+# 
+${ccc} policy load -f ./conjur/authn-jwt/authn-jwt-openshift.yaml -b conjur/authn-jwt
+
+${ccc} variable set -i conjur/authn-jwt/openshift/public-keys -v "{\"type\":\"jwks\", \"value\":$(cat ./conjur/authn-jwt/openshift/jwks.json)}"
+${ccc} variable set -i conjur/authn-jwt/openshift/issuer -v https://kubernetes.default.svc
+${ccc} variable set -i conjur/authn-jwt/openshift/token-app-property -v "sub"
+${ccc} variable set -i conjur/authn-jwt/openshift/identity-path -v data/apj_secrets/openshift-apps
+${ccc} variable set -i conjur/authn-jwt/openshift/audience -v "https://kubernetes.default.svc"
+
+${ccc} authenticator enable --id authn-jwt/openshift
+
+${ccc} policy load -f ./data/apps-openshift.yml -b data
+
+${ccc} policy load -f ./conjur/authn-jwt/openshift/grant-openshift.yml -b conjur/authn-jwt/openshift
+${ccc} policy load -f ./data/entitle-openshift.yml -b data
