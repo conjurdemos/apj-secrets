@@ -10,11 +10,13 @@
         annotations:
             authn-jwt/jenkins/jenkins_task_noun: Build
             authn-jwt/jenkins/jenkins_parent_full_name: Demo
+            jenkins: true
       - !host
         id: Demo/Secure_Pipeline_Project
         annotations:
             authn-jwt/jenkins/jenkins_task_noun: Build
             authn-jwt/jenkins/jenkins_parent_full_name: Demo
+            jenkins: true
       - !host
         id: Secure_Freestyle_Project
         annotations:
@@ -65,6 +67,12 @@
           authn-jwt/jenkins/jenkins_pronoun: Pipeline
           authn-jwt/jenkins/identity: Secure_SSHKey_Pipeline_Demo
           authn/api-key: true
+      - !host
+        id: Demo/Bitbucket_Jenkins_Terraform_Openshift
+        annotations:
+            authn-jwt/jenkins/jenkins_task_noun: Build
+            authn-jwt/jenkins/jenkins_parent_full_name: Demo
+            jenkins: true
     - !grant
       role: !group
       members: *hosts
